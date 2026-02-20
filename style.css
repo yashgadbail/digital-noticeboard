@@ -1,10 +1,13 @@
 :root {
   --bg-color: #050505;
-  --text-primary: #33ff33; /* Neon Green */
-  --text-secondary: #ff9900; /* Neon Orange/Amber */
+  --text-primary: #33ff33;
+  /* Neon Green */
+  --text-secondary: #ff9900;
+  /* Neon Orange/Amber */
   --border-color: #33ff33;
   --panel-bg: rgba(5, 5, 5, 0.85);
-  --scms-red: #c02931; /* Derived from logo */
+  --scms-red: #c02931;
+  /* Derived from logo */
   --crt-scanline: rgba(51, 255, 51, 0.05);
 }
 
@@ -27,7 +30,11 @@ body {
   user-select: none;
 }
 
-h1, h2, h3, .widget-header, .event-date {
+h1,
+h2,
+h3,
+.widget-header,
+.event-date {
   font-family: 'Press Start 2P', monospace;
   text-transform: uppercase;
 }
@@ -52,18 +59,21 @@ h1, h2, h3, .widget-header, .event-date {
   height: 100%;
   z-index: 10;
   pointer-events: none;
-  background: linear-gradient(
-    var(--crt-scanline) 50%,
-    rgba(0, 0, 0, 0.25) 50%
-  );
+  background: linear-gradient(var(--crt-scanline) 50%,
+      rgba(0, 0, 0, 0.25) 50%);
   background-size: 100% 4px;
   animation: scanlines 10s linear infinite;
-  box-shadow: inset 0 0 100px rgba(0,0,0,0.9);
+  box-shadow: inset 0 0 100px rgba(0, 0, 0, 0.9);
 }
 
 @keyframes scanlines {
-  0% { transform: translateY(0); }
-  100% { transform: translateY(4px); }
+  0% {
+    transform: translateY(0);
+  }
+
+  100% {
+    transform: translateY(4px);
+  }
 }
 
 /* Add a subtle flicker */
@@ -83,17 +93,24 @@ h1, h2, h3, .widget-header, .event-date {
 }
 
 @keyframes flicker {
-  0% { opacity: 0.02; }
-  50% { opacity: 0.05; }
-  100% { opacity: 0.02; }
+  0% {
+    opacity: 0.02;
+  }
+
+  50% {
+    opacity: 0.05;
+  }
+
+  100% {
+    opacity: 0.02;
+  }
 }
 
 /* Main App Container */
 #app {
   position: relative;
-  z-index: 5;
-  width: 95vw;
-  height: 95vh;
+  width: 1536px;
+  height: 800px;
   display: flex;
   flex-direction: column;
   border: 2px solid var(--border-color);
@@ -118,15 +135,17 @@ h1, h2, h3, .widget-header, .event-date {
   display: flex;
   justify-content: center;
   align-items: center;
-  border: 2px dashed var(--border-color);
+  border: none;
   padding: 5px;
-  background: white; /* to make the logo visible */
+  background: transparent;
 }
 
-.logo {
-  max-width: 100%;
-  max-height: 100%;
+.static-logo {
+  width: 100%;
+  height: 100%;
   object-fit: contain;
+  filter: drop-shadow(0 0 8px rgba(0, 255, 0, 0.4));
+  /* Slight neon glow matching retro theme */
 }
 
 .header-title {
@@ -239,6 +258,7 @@ h1, h2, h3, .widget-header, .event-date {
 .widget.highlight {
   border-color: var(--text-secondary);
 }
+
 .widget.highlight .widget-header {
   color: var(--text-secondary);
   border-bottom-color: var(--text-secondary);
@@ -288,7 +308,9 @@ h1, h2, h3, .widget-header, .event-date {
 }
 
 @keyframes blinker {
-  50% { opacity: 0; }
+  50% {
+    opacity: 0;
+  }
 }
 
 /* Footer Ticker */
@@ -320,6 +342,11 @@ h1, h2, h3, .widget-header, .event-date {
 }
 
 @keyframes ticker-scroll {
-  0% { transform: translate3d(0, 0, 0); }
-  100% { transform: translate3d(-50%, 0, 0); }
+  0% {
+    transform: translate3d(0, 0, 0);
+  }
+
+  100% {
+    transform: translate3d(-50%, 0, 0);
+  }
 }

@@ -1,4 +1,5 @@
 import * as THREE from 'three';
+import { CSS3DRenderer, CSS3DObject } from 'three/addons/renderers/CSS3DRenderer.js';
 import gsap from 'gsap';
 
 // ==========================================
@@ -182,7 +183,8 @@ function cycleScreens() {
 fetchAndPopulate();
 
 // ==========================================
-// 3. Three.js Retro Grid Background
+// ==========================================
+// 3. Three.js Retro Grid Background & Logo
 // ==========================================
 const canvas = document.querySelector('#bg-canvas');
 const scene = new THREE.Scene();
@@ -204,6 +206,23 @@ const renderer = new THREE.WebGLRenderer({
 renderer.setSize(window.innerWidth, window.innerHeight);
 renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 
+// Setup CSS3D Renderer for the HTML Panel
+const cssRenderer = new CSS3DRenderer();
+cssRenderer.setSize(window.innerWidth, window.innerHeight);
+cssRenderer.domElement.style.position = 'absolute';
+cssRenderer.domElement.style.top = '0';
+cssRenderer.domElement.style.pointerEvents = 'none'; // let clicks pass through to UI if needed, or handle in CSS
+document.body.appendChild(cssRenderer.domElement);
+
+// Convert HTML #app to a 3D Object
+const appElement = document.getElementById('app');
+const cssObject = new CSS3DObject(appElement);
+// Scale down HTML dimensions to WebGL scale
+// Increased scale to make it bigger on screen
+cssObject.scale.set(0.02, 0.02, 0.02);
+cssObject.position.set(0, 0, 0);
+scene.add(cssObject);
+
 // Create a large grid helper
 const gridSize = 100;
 const gridDivisions = 50;
@@ -213,15 +232,7 @@ const colorGrid = 0x003300;       // Dark Green
 const gridHelper = new THREE.GridHelper(gridSize, gridDivisions, colorCenterLine, colorGrid);
 scene.add(gridHelper);
 
-// Mouse interaction for grid rotation
-let mouseX = 0;
-let targetX = 0;
-
-const windowHalfX = window.innerWidth / 2;
-
-document.addEventListener('mousemove', (event) => {
-    mouseX = (event.clientX - windowHalfX);
-});
+// Mouse interaction removed as per user request to freeze camera
 
 // Animation Loop
 const clock = new THREE.Clock();
@@ -234,11 +245,16 @@ function animate() {
     // Move grid towards camera continuously to simulate forward movement
     gridHelper.position.z = (elapsedTime * 2) % (gridSize / gridDivisions);
 
-    // Tilt slightly based on mouse position
-    targetX = mouseX * 0.001;
-    camera.rotation.y += 0.05 * (targetX - camera.rotation.y);
+    // Camera tilt removed as per freeze request
+
+    // Static 3D tilt for the HTML Panel (Frozen)
+    if (typeof cssObject !== 'undefined') {
+        // Align perfectly parallel to the camera view plane to eliminate perspective distortion
+        cssObject.quaternion.copy(camera.quaternion);
+    }
 
     renderer.render(scene, camera);
+    cssRenderer.render(scene, camera);
 }
 
 animate();
@@ -248,4 +264,5 @@ window.addEventListener('resize', () => {
     camera.aspect = window.innerWidth / window.innerHeight;
     camera.updateProjectionMatrix();
     renderer.setSize(window.innerWidth, window.innerHeight);
+    cssRenderer.setSize(window.innerWidth, window.innerHeight);
 });

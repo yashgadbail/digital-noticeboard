@@ -1,0 +1,72 @@
+{
+  "notices": [
+    {
+      "id": "1",
+      "title": "EXAM SCHEDULE",
+      "content": "End semester examinations will commence from Nov 15th. Check portal for details.",
+      "date": "2026-10-25",
+      "urgent": false
+    },
+    {
+      "id": "2",
+      "title": "HOLIDAY ANNOUNCEMENT",
+      "content": "College will remain closed on Friday for Diwali preparations.",
+      "date": "",
+      "urgent": true
+    },
+    {
+      "id": "3",
+      "title": "GUEST LECTURE",
+      "content": "Guest lecture on 'Future of AI in Marketing' in Room 302 at 11:00 AM tomorrow.",
+      "date": "2026-10-26",
+      "urgent": false
+    },
+    {
+      "id": "4",
+      "title": "LIBRARY RENEWAL",
+      "content": "Please renew books before the end of the month to avoid late fees.",
+      "date": "2026-10-20",
+      "urgent": false
+    }
+  ],
+  "events": [
+    {
+      "id": "1",
+      "title": "Sympulse Pre-Events",
+      "description": "Registration opens at quadrangle",
+      "date": "NOV 05"
+    },
+    {
+      "id": "2",
+      "title": "Alumni Meet 2026",
+      "description": "Main Auditorium, 5:00 PM onwards",
+      "date": "NOV 10"
+    },
+    {
+      "id": "3",
+      "title": "Start-up Pitch Fest",
+      "description": "Incubation Cell, Register by Nov 12",
+      "date": "NOV 18"
+    }
+  ],
+  "birthdays": [
+    {
+      "id": "1",
+      "name": "Prof. Alan Turing",
+      "department": "Computer Science",
+      "date": "02-21"
+    },
+    {
+      "id": "2",
+      "name": "Dr. Ada Lovelace",
+      "department": "Mathematics",
+      "date": "12-10"
+    },
+    {
+      "id": "3",
+      "name": "Test Student",
+      "department": "BBA",
+      "date": "02-21"
+    }
+  ]
+}

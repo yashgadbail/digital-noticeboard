@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SCMS Digital Noticeboard</title>
+  <link rel="stylesheet" href="./style.css">
+  <!-- Google Fonts for Retro Pixel Look -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap" rel="stylesheet">
+</head>
+
+<body>
+  <!-- 3D Background Canvas -->
+  <canvas id="bg-canvas"></canvas>
+
+  <!-- Overlay CRT Effect -->
+  <div class="crt-overlay"></div>
+
+  <!-- Main Container -->
+  <div id="app">
+
+    <!-- Top Header Area -->
+    <header class="header">
+      <div class="logo-container">
+        <img src="/logo.png" alt="SCMS Logo" class="logo" onerror="this.src='https://placehold.co/100x100?text=SCMS'" />
+      </div>
+      <div class="header-title">
+        <h1>DIGITAL NOTICEBOARD</h1>
+        <p class="subtitle">SCIENTIFIC COMPUTING, MODELING & SIMULATION</p>
+      </div>
+      <div class="clock-container">
+        <div id="clock">00:00:00</div>
+        <div id="date">YYYY-MM-DD</div>
+      </div>
+    </header>
+
+    <!-- Dynamic Content Area -->
+    <main class="content-area">
+
+      <!-- Screen 1: General Notices -->
+      <section class="screen" id="screen-notices">
+        <h2 class="section-title">> RECENT_NOTICES.TXT</h2>
+        <div class="widget-grid" id="notices-container"></div>
+      </section>
+
+      <!-- Screen 2: Events & Activities -->
+      <section class="screen hidden" id="screen-events">
+        <h2 class="section-title">> UPCOMING_EVENTS.EXE</h2>
+        <div class="widget-list" id="events-container"></div>
+      </section>
+
+      <!-- Screen 3: Birthdays -->
+      <section class="screen hidden" id="screen-birthdays">
+        <h2 class="section-title">> TODAY_BIRTHDAYS.DAT</h2>
+        <div class="widget-list" id="birthdays-container"></div>
+      </section>
+
+      <!-- Templates -->
+      <template id="tpl-notice">
+        <article class="widget notice-widget">
+          <div class="widget-header"></div>
+          <div class="widget-footer blink">URGENT</div>
+          <div class="widget-content"></div>
+          <div class="widget-footer date-footer"></div>
+        </article>
+      </template>
+
+      <template id="tpl-event">
+        <div class="list-item">
+          <div class="event-date"></div>
+          <div class="event-details">
+            <h3></h3>
+            <p></p>
+          </div>
+        </div>
+      </template>
+
+      <template id="tpl-birthday">
+        <div class="list-item">
+          <div class="event-date">🎈</div>
+          <div class="event-details">
+            <h3></h3>
+            <p></p>
+          </div>
+        </div>
+      </template>
+
+    </main>
+
+    <!-- Footer Area -->
+    <footer class="footer">
+      <div class="ticker-wrap">
+        <div class="ticker">
+          <div class="ticker__item">Welcome to SCMS SPPU Online Interface</div>
+          <div class="ticker__item">System Status: ONLINE</div>
+          <div class="ticker__item">Next Screen Update in T-minus 10 seconds</div>
+          <!-- Duplicate for seamless loop -->
+          <div class="ticker__item">Welcome to SCMS SPPU Online Interface</div>
+          <div class="ticker__item">System Status: ONLINE</div>
+          <div class="ticker__item">Next Screen Update in T-minus 10 seconds</div>
+        </div>
+      </div>
+    </footer>
+
+  </div>
+
+  <script type="module" src="./main.js"></script>
+</body>
+
+</html>

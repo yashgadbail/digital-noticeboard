@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SCMS Noticeboard Admin</title>
+    <link rel="stylesheet" href="./admin.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <div class="admin-container">
+        <header class="admin-header">
+            <div class="header-left">
+                <img src="/logo.png" alt="SCMS Logo" class="admin-logo"
+                    onerror="this.src='https://placehold.co/50x50?text=Logo'" />
+                <h1>Admin Dashboard</h1>
+            </div>
+            <div class="header-actions">
+                <span id="save-status" class="status-msg"></span>
+                <button id="save-btn" class="btn primary">Save Changes to Display</button>
+            </div>
+        </header>
+
+        <main class="admin-grid">
+
+            <!-- Notices Section -->
+            <section class="panel">
+                <div class="panel-header">
+                    <h2>Recent Notices</h2>
+                    <button class="btn small" onclick="addNotice()">+ Add Notice</button>
+                </div>
+                <div id="notices-list" class="item-list">
+                    <!-- Template injected via JS -->
+                </div>
+            </section>
+
+            <!-- Events Section -->
+            <section class="panel">
+                <div class="panel-header">
+                    <h2>Upcoming Events</h2>
+                    <button class="btn small" onclick="addEvent()">+ Add Event</button>
+                </div>
+                <div id="events-list" class="item-list">
+                    <!-- Template injected via JS -->
+                </div>
+            </section>
+
+            <!-- Birthdays Section -->
+            <section class="panel">
+                <div class="panel-header">
+                    <h2>Birthdays</h2>
+                    <button class="btn small" onclick="addBirthday()">+ Add Birthday</button>
+                </div>
+                <div id="birthdays-list" class="item-list">
+                    <!-- Template injected via JS -->
+                </div>
+            </section>
+
+        </main>
+    </div>
+
+    <!-- Templates for JS Cloning -->
+    <template id="notice-template">
+        <div class="data-item">
+            <div class="item-header">
+                <input type="text" class="input-title" placeholder="Notice Title">
+                <button class="btn danger small" onclick="removeItem(this)">Remove</button>
+            </div>
+            <textarea class="input-content" placeholder="Notice Content..."></textarea>
+            <div class="item-footer">
+                <input type="date" class="input-date">
+                <label><input type="checkbox" class="input-urgent"> Urgent (Blink)</label>
+            </div>
+        </div>
+    </template>
+
+    <template id="event-template">
+        <div class="data-item">
+            <div class="item-header">
+                <input type="text" class="input-title" placeholder="Event Name">
+                <button class="btn danger small" onclick="removeItem(this)">Remove</button>
+            </div>
+            <input type="text" class="input-desc" placeholder="Location or Details">
+            <div class="item-footer">
+                <input type="text" class="input-date-string" placeholder="e.g. NOV 15">
+            </div>
+        </div>
+    </template>
+
+    <template id="birthday-template">
+        <div class="data-item">
+            <div class="item-header">
+                <input type="text" class="input-name" placeholder="Person's Name">
+                <button class="btn danger small" onclick="removeItem(this)">Remove</button>
+            </div>
+            <input type="text" class="input-dept" placeholder="Department">
+            <div class="item-footer">
+                <input type="text" class="input-bdate" placeholder="MM-DD (e.g. 10-25)">
+            </div>
+        </div>
+    </template>
+
+    <script type="module" src="./admin.js"></script>
+</body>
+
+</html>

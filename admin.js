@@ -17,6 +17,7 @@ const noticeTpl = document.getElementById('notice-template');
 const eventTpl = document.getElementById('event-template');
 const birthdayTpl = document.getElementById('birthday-template');
 const cctvTpl = document.getElementById('cctv-template');
+const videoTpl = document.getElementById('video-template');
 
 // Initialize
 async function init() {
@@ -42,13 +43,22 @@ function renderAll() {
     if (adminData.events) adminData.events.forEach(e => appendEvent(e));
     if (adminData.birthdays) adminData.birthdays.forEach(b => appendBirthday(b));
     if (adminData.cctv) adminData.cctv.forEach(c => appendCctv(c));
+    if (adminData.videos) adminData.videos.forEach(v => appendVideo(v));
+
+    const videosList = document.getElementById('videos-list');
+    if (videosList && adminData.videos) {
+        // videos already appended above, just setup the UI element explicitly
+    }
 
     // Restore Visibility Config
-    const config = adminData.config || { showNotices: true, showEvents: true, showBirthdays: true, showCctv: true };
+    const config = adminData.config || { showNotices: true, showEvents: true, showBirthdays: true, showCctv: true, showVideos: true };
     document.getElementById('toggle-notices').checked = config.showNotices !== false;
     document.getElementById('toggle-events').checked = config.showEvents !== false;
     document.getElementById('toggle-birthdays').checked = config.showBirthdays !== false;
     document.getElementById('toggle-cctv').checked = config.showCctv !== false;
+    if (document.getElementById('toggle-videos')) {
+        document.getElementById('toggle-videos').checked = config.showVideos !== false;
+    }
 }
 
 function appendNotice(data = {}) {
@@ -97,11 +107,23 @@ function appendCctv(data = {}) {
     cctvList.appendChild(clone);
 }
 
+function appendVideo(data = {}) {
+    const clone = videoTpl.content.cloneNode(true);
+    const div = clone.querySelector('.data-item');
+    const videosList = document.getElementById('videos-list');
+
+    div.querySelector('.input-title').value = data.title || '';
+    div.querySelector('.input-url').value = data.url || '';
+
+    videosList.appendChild(clone);
+}
+
 // Actions (Bound to window so inline onclick works)
 window.addNotice = () => appendNotice();
 window.addEvent = () => appendEvent();
 window.addBirthday = () => appendBirthday();
 window.addCctv = () => appendCctv();
+window.addVideo = () => appendVideo();
 
 // Tab Functionality
 window.switchTab = (tabId) => {
@@ -152,12 +174,14 @@ saveBtn.addEventListener('click', async () => {
             showNotices: document.getElementById('toggle-notices').checked,
             showEvents: document.getElementById('toggle-events').checked,
             showBirthdays: document.getElementById('toggle-birthdays').checked,
-            showCctv: document.getElementById('toggle-cctv').checked
+            showCctv: document.getElementById('toggle-cctv').checked,
+            showVideos: document.getElementById('toggle-videos') ? document.getElementById('toggle-videos').checked : true
         },
         notices: [],
         events: [],
         birthdays: [],
-        cctv: []
+        cctv: [],
+        videos: []
     };
 
     // Parse Notices
@@ -201,6 +225,23 @@ saveBtn.addEventListener('click', async () => {
             grid: item.querySelector('.input-grid').value
         });
     });
+
+    // Parse Videos
+    const videosList = document.getElementById('videos-list');
+    if (videosList) {
+        videosList.querySelectorAll('.data-item').forEach((item, idx) => {
+            let urlVal = item.querySelector('.input-url').value.trim();
+            // simple check: if it looks like a youtube embed or standard watch parameter
+            let typeVal = (urlVal.includes('youtube.com') || urlVal.includes('youtu.be')) ? 'youtube' : 'local';
+
+            newData.videos.push({
+                id: String(idx + 1),
+                title: item.querySelector('.input-title').value,
+                url: urlVal,
+                type: typeVal
+            });
+        });
+    }
 
     try {
         const response = await fetch('/api/data', {

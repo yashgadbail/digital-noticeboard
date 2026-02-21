@@ -44,6 +44,7 @@ let screens = [];
 let currentScreenIndex = 0;
 const screenDuration = 10; // seconds per screen
 let isFirstLoad = true;
+let videoQueue = []; // Holds the list of videos for sequential playback
 
 async function fetchAndPopulate(isBackgroundRefresh = false) {
     try {
@@ -58,6 +59,9 @@ async function fetchAndPopulate(isBackgroundRefresh = false) {
         // Read config or default all to true
         const config = data.config || { showNotices: true, showEvents: true, showBirthdays: true, showCctv: true };
 
+        // Cache global video queue
+        videoQueue = data.videos || [];
+
         // Update active screens list without breaking the current cycle
         const allScreens = Array.from(document.querySelectorAll('.screen'));
         let activeScreens = allScreens.filter(s => {
@@ -65,6 +69,11 @@ async function fetchAndPopulate(isBackgroundRefresh = false) {
             if (s.id === 'screen-notices' && config.showNotices === false) return false;
             if (s.id === 'screen-events' && config.showEvents === false) return false;
             if (s.id === 'screen-cctv' && config.showCctv === false) return false;
+            if (s.id === 'screen-videos') {
+                if (config.showVideos === false) return false;
+                // Also hide video screen completely if the queue is empty
+                if (videoQueue.length === 0) return false;
+            }
 
             // Hide birthday screen if toggled off OR no birthdays today
             if (s.id === 'screen-birthdays') {
@@ -351,8 +360,137 @@ function cycleScreens() {
         }
     }
 
-    // Continue the screen cycle using the calculated delay
-    gsap.delayedCall(delay, cycleScreens);
+    if (nextScreen.id === 'screen-videos') {
+        // Enter sequential video playback queue. Do not call gsap.delayedCall yet!
+        setTimeout(() => playVideoSequence(0), 800);
+    } else {
+        // Continue the standard screen cycle using the calculated delay
+        gsap.delayedCall(delay, cycleScreens);
+    }
+}
+
+// ==========================================
+// 2b. Sequential Video Engine
+// ==========================================
+function loadYouTubeAPI(callback) {
+    if (window.YT && window.YT.Player) {
+        callback();
+    } else {
+        const tag = document.createElement('script');
+        tag.src = "https://www.youtube.com/iframe_api";
+        const firstScriptTag = document.getElementsByTagName('script')[0];
+        firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+        // YT will automatically call this global function when ready
+        window.onYouTubeIframeAPIReady = () => {
+            callback();
+        };
+    }
+}
+
+function playVideoSequence(vIndex) {
+    if (vIndex >= videoQueue.length) {
+        // All videos finished back-to-back. Proceed to next screen!
+        cycleScreens();
+        return;
+    }
+
+    const videoConfig = videoQueue[vIndex];
+    const mount = document.getElementById('video-mount');
+    const overlay = document.getElementById('video-title-overlay');
+
+    // Set Title Overlay
+    if (videoConfig.title && videoConfig.title.trim() !== '') {
+        overlay.textContent = videoConfig.title;
+        overlay.classList.remove('hidden');
+        // Slight delay for smooth fade in
+        setTimeout(() => overlay.classList.add('visible'), 300);
+    } else {
+        overlay.classList.remove('visible');
+        overlay.classList.add('hidden');
+    }
+
+    mount.innerHTML = ''; // Clear previous player
+
+    // Next helper function
+    let completed = false;
+    const playNext = () => {
+        if (completed) return;
+        completed = true;
+        overlay.classList.remove('visible');
+        setTimeout(() => {
+            mount.innerHTML = '';
+            // Recursively play next video
+            playVideoSequence(vIndex + 1);
+        }, 500); // 500ms black screen buffer between videos
+    };
+
+    // Failsafe timer: if a video somehow breaks and never fires 'ended', auto-skip after 5 minutes
+    const failsafe = setTimeout(playNext, 300000);
+
+    // PLAY YOUTUBE
+    if (videoConfig.type === 'youtube') {
+        let videoId = '';
+        try {
+            const urlObj = new URL(videoConfig.url);
+            if (urlObj.hostname.includes('youtube.com')) {
+                videoId = urlObj.searchParams.get('v');
+            } else if (urlObj.hostname.includes('youtu.be')) {
+                videoId = urlObj.pathname.slice(1);
+            }
+        } catch (e) {
+            console.error("Invalid YouTube URL:", videoConfig.url);
+            playNext();
+            return;
+        }
+
+        if (!videoId) { playNext(); return; }
+
+        mount.innerHTML = `<div id="yt-player-${vIndex}"></div>`;
+        loadYouTubeAPI(() => {
+            new YT.Player(`yt-player-${vIndex}`, {
+                videoId: videoId,
+                playerVars: { 'autoplay': 1, 'controls': 0, 'mute': 1, 'rel': 0, 'modestbranding': 1 },
+                events: {
+                    'onReady': (event) => {
+                        event.target.playVideo();
+                    },
+                    'onStateChange': (event) => {
+                        // State 0 is ENDED
+                        if (event.data === 0) {
+                            clearTimeout(failsafe);
+                            playNext();
+                        }
+                    },
+                    'onError': () => {
+                        clearTimeout(failsafe);
+                        playNext();
+                    }
+                }
+            });
+        });
+
+        // PLAY LOCAL DIRECT MEDIA
+    } else {
+        const videoEl = document.createElement('video');
+        videoEl.src = videoConfig.url;
+        videoEl.autoplay = true;
+        videoEl.muted = true;
+        videoEl.controls = false;
+        videoEl.style.width = '100%';
+        videoEl.style.height = '100%';
+        videoEl.style.objectFit = 'contain';
+
+        videoEl.onended = () => {
+            clearTimeout(failsafe);
+            playNext();
+        };
+        videoEl.onerror = () => {
+            clearTimeout(failsafe);
+            playNext(); // skip broken video
+        };
+
+        mount.appendChild(videoEl);
+    }
 }
 
 // Start sequence

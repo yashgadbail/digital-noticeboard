@@ -1,9 +1,10 @@
 {
   "config": {
     "showNotices": true,
-    "showEvents": false,
+    "showEvents": true,
     "showBirthdays": true,
-    "showCctv": false
+    "showCctv": false,
+    "showVideos": true
   },
   "notices": [
     {
@@ -31,21 +32,21 @@
   "events": [
     {
       "id": "1",
-      "title": "Sympulse Pre-Events",
+      "title": "Pre-Events",
       "description": "Registration opens at quadrangle",
-      "date": "NOV 05"
+      "date": "MAR 05"
     },
     {
       "id": "2",
       "title": "Alumni Meet 2026",
       "description": "Main Auditorium, 5:00 PM onwards",
-      "date": "NOV 10"
+      "date": "MAR 10"
     },
     {
       "id": "3",
       "title": "Start-up Pitch Fest",
-      "description": "Incubation Cell, Register by Nov 12",
-      "date": "NOV 18"
+      "description": "Incubation Cell, Register by Mar 12",
+      "date": "MAR 18"
     }
   ],
   "birthdays": [
@@ -86,6 +87,14 @@
       "label": "CURRENT SCREEN",
       "stream": "",
       "grid": "4"
+    }
+  ],
+  "videos": [
+    {
+      "id": "1",
+      "title": "SCMS Tour 2026",
+      "url": "public/Scientific Computing  Pure Science + Computer Science  Degree programme  Pune University  campus - School Of Scientific Computing University of Pune.mp4",
+      "type": "local"
     }
   ]
 }

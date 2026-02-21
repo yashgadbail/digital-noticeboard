@@ -32,8 +32,16 @@
         <p class="subtitle">SCIENTIFIC COMPUTING, MODELING & SIMULATION</p>
       </div>
       <div class="clock-container">
-        <div id="clock">00:00:00</div>
-        <div id="date">YYYY-MM-DD</div>
+        <div class="celestial-indicator">
+          <div class="sky-track" id="sky-track">
+            <div class="celestial-body sun">☀️</div>
+            <div class="celestial-body moon">🌙</div>
+          </div>
+        </div>
+        <div class="time-wrapper">
+          <div id="clock">00:00:00</div>
+          <div id="date">YYYY-MM-DD</div>
+        </div>
       </div>
     </header>
 
@@ -42,7 +50,7 @@
 
       <!-- Screen 1: General Notices -->
       <section class="screen" id="screen-notices">
-        <h2 class="section-title">> RECENT_NOTICES.TXT</h2>
+        <h2 class="section-title">> RECENT_NOTICES</h2>
         <div class="notices-wrapper">
           <div class="widget-grid" id="notices-container"></div>
         </div>
@@ -50,13 +58,13 @@
 
       <!-- Screen 2: Events & Activities -->
       <section class="screen hidden" id="screen-events">
-        <h2 class="section-title">> UPCOMING_EVENTS.EXE</h2>
+        <h2 class="section-title">> UPCOMING_EVENTS</h2>
         <div class="widget-list" id="events-container"></div>
       </section>
 
       <!-- Screen 3: Birthdays -->
       <section class="screen hidden" id="screen-birthdays">
-        <h2 class="section-title">> TODAY_BIRTHDAYS.DAT</h2>
+        <h2 class="section-title">> TODAY_BIRTHDAYS</h2>
         <div class="widget-list" id="birthdays-container"></div>
       </section>
 

@@ -16,18 +16,25 @@
   /* Vibrant Red for accents/urgent */
 }
 
-/* Light Theme Variables */
+/* Light Theme Variables (Cream & Red SCMS Branding) */
 :root[data-theme="light"] {
-  --bg-color: #e2e8f0;
-  --text-primary: #1a202c;
-  --text-secondary: #d53f8c;
-  --text-muted: #4a5568;
+  --bg-color: #fdfbf7;
+  /* Warm Cream */
+  --text-primary: #2d2a2a;
+  /* Deep Charcoal/Grey */
+  --text-secondary: #cc1122;
+  /* SCMS Red */
+  --text-muted: #7a7070;
+  /* Warm Grey */
 
-  --glass-bg: rgba(255, 255, 255, 0.4);
-  --glass-border: rgba(0, 0, 0, 0.1);
-  --glass-highlight: rgba(255, 255, 255, 0.5);
+  --glass-bg: rgba(250, 245, 240, 0.65);
+  /* Tinted Cream Glass */
+  --glass-border: rgba(204, 17, 34, 0.15);
+  /* Faint Red Border */
+  --glass-highlight: rgba(255, 255, 255, 0.8);
 
-  --scms-red: #e53e3e;
+  --scms-red: #cc1122;
+  /* Primary Red Accent */
 }
 
 * {
@@ -140,8 +147,69 @@ h3,
 }
 
 .clock-container {
-  text-align: right;
+  display: flex;
+  align-items: center;
+  gap: 1.2rem;
   min-width: 150px;
+}
+
+.time-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}
+
+/* Celestial Time Indicator */
+.celestial-indicator {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.2);
+  border: 1px solid var(--glass-border);
+  box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.4);
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.sky-track {
+  position: absolute;
+  width: 0;
+  height: 0;
+  top: 22px;
+  /* Center pivot horizontally & vertically */
+  left: 22px;
+  transition: transform 1s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.celestial-body {
+  position: absolute;
+  width: 24px;
+  height: 24px;
+  left: -12px;
+  top: -12px;
+  font-size: 16px;
+  line-height: 24px;
+  text-align: center;
+  filter: drop-shadow(0 0 5px rgba(255, 255, 255, 0.4));
+}
+
+.sun {
+  transform: translateY(-12px);
+  /* 12px orbit radius */
+}
+
+.moon {
+  transform: translateY(12px) rotate(180deg);
+}
+
+:root[data-theme="light"] .celestial-indicator {
+  background: rgba(255, 255, 255, 0.3);
+  box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.1);
+  border: 1px solid rgba(0, 0, 0, 0.05);
 }
 
 #clock {

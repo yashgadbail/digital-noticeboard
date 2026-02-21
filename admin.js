@@ -42,6 +42,13 @@ function renderAll() {
     if (adminData.events) adminData.events.forEach(e => appendEvent(e));
     if (adminData.birthdays) adminData.birthdays.forEach(b => appendBirthday(b));
     if (adminData.cctv) adminData.cctv.forEach(c => appendCctv(c));
+
+    // Restore Visibility Config
+    const config = adminData.config || { showNotices: true, showEvents: true, showBirthdays: true, showCctv: true };
+    document.getElementById('toggle-notices').checked = config.showNotices !== false;
+    document.getElementById('toggle-events').checked = config.showEvents !== false;
+    document.getElementById('toggle-birthdays').checked = config.showBirthdays !== false;
+    document.getElementById('toggle-cctv').checked = config.showCctv !== false;
 }
 
 function appendNotice(data = {}) {
@@ -141,6 +148,12 @@ saveBtn.addEventListener('click', async () => {
 
     // Reconstruct data from DOM
     const newData = {
+        config: {
+            showNotices: document.getElementById('toggle-notices').checked,
+            showEvents: document.getElementById('toggle-events').checked,
+            showBirthdays: document.getElementById('toggle-birthdays').checked,
+            showCctv: document.getElementById('toggle-cctv').checked
+        },
         notices: [],
         events: [],
         birthdays: [],

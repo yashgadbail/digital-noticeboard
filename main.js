@@ -23,6 +23,16 @@ function updateClock() {
 
     document.getElementById('clock').textContent = timeString;
     document.getElementById('date').textContent = dateString;
+
+    // Update Celestial Indicator to signify time of day
+    const skyTrack = document.getElementById('sky-track');
+    if (skyTrack) {
+        const secondsSinceMidnight = now.getHours() * 3600 + now.getMinutes() * 60 + now.getSeconds();
+        const percentOfDay = (secondsSinceMidnight / 86400);
+        // 0% (Midnight) -> 180deg (Moon top), 50% (Noon) -> 0deg (Sun top), 100% -> -180deg
+        const angle = 180 - (percentOfDay * 360);
+        skyTrack.style.transform = `rotate(${angle}deg)`;
+    }
 }
 setInterval(updateClock, 1000);
 updateClock();
@@ -45,11 +55,21 @@ async function fetchAndPopulate(isBackgroundRefresh = false) {
         populateBirthdays(data.birthdays);
         populateCctv(data.cctv);
 
+        // Read config or default all to true
+        const config = data.config || { showNotices: true, showEvents: true, showBirthdays: true, showCctv: true };
+
         // Update active screens list without breaking the current cycle
         const allScreens = Array.from(document.querySelectorAll('.screen'));
-        const activeScreens = allScreens.filter(s => {
-            // Hide birthday screen if no birthdays today
+        let activeScreens = allScreens.filter(s => {
+            // Apply Admin Panel visibility toggles
+            if (s.id === 'screen-notices' && config.showNotices === false) return false;
+            if (s.id === 'screen-events' && config.showEvents === false) return false;
+            if (s.id === 'screen-cctv' && config.showCctv === false) return false;
+
+            // Hide birthday screen if toggled off OR no birthdays today
             if (s.id === 'screen-birthdays') {
+                if (config.showBirthdays === false) return false;
+
                 const hasBirthdays = data.birthdays && data.birthdays.some(b => {
                     const today = new Date();
                     const mm = String(today.getMonth() + 1).padStart(2, '0');
@@ -60,6 +80,11 @@ async function fetchAndPopulate(isBackgroundRefresh = false) {
             }
             return true;
         });
+
+        // Safety fallback: if user disables EVERYTHING, force Notices to display
+        if (activeScreens.length === 0) {
+            activeScreens = [document.getElementById('screen-notices')];
+        }
 
         // Set screens globally
         screens = activeScreens;
@@ -326,17 +351,17 @@ function cycleScreens() {
         }
     }
 
-    // Do a background data refresh when we switch OFF the Notices screen
-    if (currentScreenIndex === 1) {
-        fetchAndPopulate(true);
-    }
-
     // Continue the screen cycle using the calculated delay
     gsap.delayedCall(delay, cycleScreens);
 }
 
 // Start sequence
 fetchAndPopulate();
+
+// Continuously poll for live data & config updates every 30 seconds
+setInterval(() => {
+    fetchAndPopulate(true);
+}, 30000);
 
 // ==========================================
 // ==========================================
@@ -375,37 +400,54 @@ cssObject.scale.set(0.018, 0.018, 0.018);
 cssObject.position.set(0, 0, 0);
 scene.add(cssObject);
 
-// Create Floating Animated Orbs
-const orbs = [];
-const orbColors = [0xff0066, 0x9900ff, 0x00ccff, 0xff9900];
+// --- Background: Tech/Mathematical Particle Network ---
+const particleCount = 150;
+const maxDistance = 4.0; // Max distance for drawing lines
 
-for (let i = 0; i < 15; i++) {
-    const geometry = new THREE.SphereGeometry(Math.random() * 2 + 1, 32, 32);
-    const material = new THREE.MeshBasicMaterial({
-        color: orbColors[Math.floor(Math.random() * orbColors.length)],
-        transparent: true,
-        opacity: Math.random() * 0.4 + 0.1
+// Geometry for Points
+const particlesGeometry = new THREE.BufferGeometry();
+const particlePositions = new Float32Array(particleCount * 3);
+const particleVelocities = [];
+
+for (let i = 0; i < particleCount; i++) {
+    // Random position across the visible frustum
+    particlePositions[i * 3] = (Math.random() - 0.5) * 40;
+    particlePositions[i * 3 + 1] = (Math.random() - 0.5) * 20;
+    particlePositions[i * 3 + 2] = (Math.random() - 0.5) * 15 - 5;
+
+    // Movement velocity vector
+    particleVelocities.push({
+        x: (Math.random() - 0.5) * 0.02,
+        y: (Math.random() - 0.5) * 0.02,
+        z: (Math.random() - 0.5) * 0.02
     });
-
-    const orb = new THREE.Mesh(geometry, material);
-
-    // Random positioning around the screen
-    orb.position.set(
-        (Math.random() - 0.5) * 40,
-        (Math.random() - 0.5) * 20,
-        (Math.random() - 0.5) * 20 - 10
-    );
-
-    // Store random animation speeds
-    orb.userData = {
-        speedY: (Math.random() - 0.5) * 0.02,
-        speedX: (Math.random() - 0.5) * 0.01,
-        startY: orb.position.y
-    };
-
-    scene.add(orb);
-    orbs.push(orb);
 }
+
+particlesGeometry.setAttribute('position', new THREE.BufferAttribute(particlePositions, 3));
+
+// Material for Points
+const pointMaterial = new THREE.PointsMaterial({
+    color: 0x88bbff, // Cool tech blue
+    size: 0.15,
+    transparent: true,
+    opacity: 0.6
+});
+const particlesMesh = new THREE.Points(particlesGeometry, pointMaterial);
+scene.add(particlesMesh);
+
+// Geometry and Material for Connecting Lines
+const linesGeometry = new THREE.BufferGeometry();
+const maxLines = particleCount * particleCount;
+const linePositions = new Float32Array(maxLines * 3);
+linesGeometry.setAttribute('position', new THREE.BufferAttribute(linePositions, 3));
+
+const lineMaterial = new THREE.LineBasicMaterial({
+    color: 0x88bbff,
+    transparent: true,
+    opacity: 0.15
+});
+const linesMesh = new THREE.LineSegments(linesGeometry, lineMaterial);
+scene.add(linesMesh);
 
 // Add ambient light for better blending
 const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
@@ -417,17 +459,49 @@ const clock = new THREE.Clock();
 function animate() {
     requestAnimationFrame(animate);
 
-    const time = clock.getElapsedTime();
+    // 1. Move Particles
+    const positions = particlesMesh.geometry.attributes.position.array;
+    for (let i = 0; i < particleCount; i++) {
+        positions[i * 3] += particleVelocities[i].x;
+        positions[i * 3 + 1] += particleVelocities[i].y;
+        positions[i * 3 + 2] += particleVelocities[i].z;
 
-    // Gently float the orbs around
-    orbs.forEach((orb, i) => {
-        orb.position.y += Math.sin(time + i) * 0.01 + orb.userData.speedY;
-        orb.position.x += Math.cos(time + i) * 0.005 + orb.userData.speedX;
+        // Bounce off invisible bounds
+        if (Math.abs(positions[i * 3]) > 25) particleVelocities[i].x *= -1;
+        if (Math.abs(positions[i * 3 + 1]) > 15) particleVelocities[i].y *= -1;
+        if (positions[i * 3 + 2] > 0 || positions[i * 3 + 2] < -15) particleVelocities[i].z *= -1;
+    }
+    particlesMesh.geometry.attributes.position.needsUpdate = true;
 
-        // Scale pulse effect
-        const scale = 1 + Math.sin(time * 2 + i) * 0.1;
-        orb.scale.set(scale, scale, scale);
-    });
+    // 2. Draw Lines between neighbors
+    let lineIdx = 0;
+    for (let i = 0; i < particleCount; i++) {
+        const x1 = positions[i * 3];
+        const y1 = positions[i * 3 + 1];
+        const z1 = positions[i * 3 + 2];
+
+        for (let j = i + 1; j < particleCount; j++) {
+            const x2 = positions[j * 3];
+            const y2 = positions[j * 3 + 1];
+            const z2 = positions[j * 3 + 2];
+
+            const distSq = (x1 - x2) ** 2 + (y1 - y2) ** 2 + (z1 - z2) ** 2;
+
+            if (distSq < maxDistance * maxDistance) {
+                linePositions[lineIdx++] = x1;
+                linePositions[lineIdx++] = y1;
+                linePositions[lineIdx++] = z1;
+
+                linePositions[lineIdx++] = x2;
+                linePositions[lineIdx++] = y2;
+                linePositions[lineIdx++] = z2;
+            }
+        }
+    }
+
+    // Update Draw Range
+    linesMesh.geometry.setDrawRange(0, lineIdx / 3);
+    linesMesh.geometry.attributes.position.needsUpdate = true;
 
     // Static 3D tilt for the HTML Panel
     if (typeof cssObject !== 'undefined') {
@@ -455,11 +529,48 @@ const themeBtn = document.getElementById('theme-toggle-btn');
 const rootElement = document.documentElement;
 
 // Load preferred theme
-const savedTheme = localStorage.getItem('theme') || 'dark';
+let savedTheme = localStorage.getItem('theme') || 'dark';
+const hasOverride = localStorage.getItem('themeOverride') === 'true';
+
+// Auto-Time Based Theme function
+function autoThemeCheck() {
+    // If user manually clicked the button, ignore auto-switching
+    if (localStorage.getItem('themeOverride') === 'true') return;
+
+    const hour = new Date().getHours();
+    // Day = 7:00 AM to 5:59 PM (Light Mode)
+    const isDay = hour >= 7 && hour < 18;
+    const targetTheme = isDay ? 'light' : 'dark';
+
+    const currentTheme = rootElement.getAttribute('data-theme');
+    if (currentTheme !== targetTheme) {
+        setTheme(targetTheme);
+    }
+}
+
+function setTheme(newTheme) {
+    rootElement.setAttribute('data-theme', newTheme);
+    localStorage.setItem('theme', newTheme);
+
+    if (themeBtn) {
+        themeBtn.textContent = newTheme === 'light' ? '🌙' : '☀️';
+    }
+
+    updateThreeJsTheme(newTheme);
+}
+
+// Initial setup
 rootElement.setAttribute('data-theme', savedTheme);
 updateThreeJsTheme(savedTheme);
 
-// Set initial icon
+// Check time immediately if no manual override
+if (!hasOverride) {
+    autoThemeCheck();
+}
+// Run check every minute to auto-switch at dawn/dusk boundaries
+setInterval(autoThemeCheck, 60000);
+
+// Manual Toggle Listener
 if (themeBtn) {
     themeBtn.textContent = savedTheme === 'light' ? '🌙' : '☀️';
 
@@ -467,14 +578,10 @@ if (themeBtn) {
         const currentTheme = rootElement.getAttribute('data-theme');
         const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
 
-        rootElement.setAttribute('data-theme', newTheme);
-        localStorage.setItem('theme', newTheme);
+        // User took manual control, disable auto-time switching
+        localStorage.setItem('themeOverride', 'true');
 
-        // Update button icon
-        themeBtn.textContent = newTheme === 'light' ? '🌙' : '☀️';
-
-        // Update 3D Background
-        updateThreeJsTheme(newTheme);
+        setTheme(newTheme);
     });
 }
 
@@ -482,8 +589,8 @@ function updateThreeJsTheme(theme) {
     if (!scene) return;
 
     if (theme === 'light') {
-        scene.background = new THREE.Color(0xe2e8f0);
-        scene.fog = new THREE.FogExp2(0xe2e8f0, 0.02);
+        scene.background = new THREE.Color(0xfdfbf7);
+        scene.fog = new THREE.FogExp2(0xfdfbf7, 0.02);
     } else {
         scene.background = new THREE.Color(0x0a0a1a);
         scene.fog = new THREE.FogExp2(0x0a0a1a, 0.02);

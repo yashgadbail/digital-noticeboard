@@ -1,4 +1,10 @@
 {
+  "config": {
+    "showNotices": true,
+    "showEvents": false,
+    "showBirthdays": true,
+    "showCctv": false
+  },
   "notices": [
     {
       "id": "1",

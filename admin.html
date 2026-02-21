@@ -39,7 +39,14 @@
             <!-- Notices Section -->
             <section id="tab-notices" class="tab-pane active">
                 <div class="panel-header">
-                    <h2>Recent Notices</h2>
+                    <div style="display: flex; align-items: center; gap: 1rem;">
+                        <h2>Recent Notices</h2>
+                        <label class="visibility-toggle">
+                            <input type="checkbox" id="toggle-notices" checked>
+                            <span class="toggle-slider"></span>
+                            Show on Noticeboard
+                        </label>
+                    </div>
                     <button class="btn small" onclick="addNotice()">+ Add Notice</button>
                 </div>
                 <!-- Card Container Grid -->
@@ -51,7 +58,14 @@
             <!-- Events Section -->
             <section id="tab-events" class="tab-pane">
                 <div class="panel-header">
-                    <h2>Upcoming Events</h2>
+                    <div style="display: flex; align-items: center; gap: 1rem;">
+                        <h2>Upcoming Events</h2>
+                        <label class="visibility-toggle">
+                            <input type="checkbox" id="toggle-events" checked>
+                            <span class="toggle-slider"></span>
+                            Show on Noticeboard
+                        </label>
+                    </div>
                     <button class="btn small" onclick="addEvent()">+ Add Event</button>
                 </div>
                 <div id="events-list" class="card-grid">
@@ -62,7 +76,14 @@
             <!-- Birthdays Section -->
             <section id="tab-birthdays" class="tab-pane">
                 <div class="panel-header">
-                    <h2>Birthdays</h2>
+                    <div style="display: flex; align-items: center; gap: 1rem;">
+                        <h2>Birthdays</h2>
+                        <label class="visibility-toggle">
+                            <input type="checkbox" id="toggle-birthdays" checked>
+                            <span class="toggle-slider"></span>
+                            Show on Noticeboard
+                        </label>
+                    </div>
                     <button class="btn small" onclick="addBirthday()">+ Add Birthday</button>
                 </div>
                 <div id="birthdays-list" class="card-grid">
@@ -73,7 +94,14 @@
             <!-- CCTV Section -->
             <section id="tab-cctv" class="tab-pane">
                 <div class="panel-header">
-                    <h2>Security Feeds (CCTV)</h2>
+                    <div style="display: flex; align-items: center; gap: 1rem;">
+                        <h2>Security Feeds (CCTV)</h2>
+                        <label class="visibility-toggle">
+                            <input type="checkbox" id="toggle-cctv" checked>
+                            <span class="toggle-slider"></span>
+                            Show on Noticeboard
+                        </label>
+                    </div>
                     <button class="btn small" onclick="addCctv()">+ Add Feed</button>
                 </div>
                 <div id="cctv-list" class="card-grid">

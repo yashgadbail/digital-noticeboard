@@ -60,6 +60,17 @@
                 </div>
             </section>
 
+            <!-- CCTV Section -->
+            <section class="panel">
+                <div class="panel-header">
+                    <h2>Security Feeds (CCTV)</h2>
+                    <button class="btn small" onclick="addCctv()">+ Add Feed</button>
+                </div>
+                <div id="cctv-list" class="item-list">
+                    <!-- Template injected via JS -->
+                </div>
+            </section>
+
         </main>
     </div>
 
@@ -100,6 +111,24 @@
             <input type="text" class="input-dept" placeholder="Department">
             <div class="item-footer">
                 <input type="text" class="input-bdate" placeholder="MM-DD (e.g. 10-25)">
+            </div>
+        </div>
+    </template>
+
+    <template id="cctv-template">
+        <div class="data-item">
+            <div class="item-header">
+                <input type="text" class="input-label" placeholder="Feed Label (e.g. MAIN GATE)">
+                <button class="btn danger small" onclick="removeItem(this)">Remove</button>
+            </div>
+            <input type="text" class="input-stream" placeholder="Stream URL or IP Address (Leave blank for STATIC)">
+            <div class="item-footer">
+                <select class="input-grid">
+                    <option value="1">Grid 1 (Top-Left)</option>
+                    <option value="2">Grid 2 (Top-Right)</option>
+                    <option value="3">Grid 3 (Bottom-Left)</option>
+                    <option value="4">Grid 4 (Bottom-Right)</option>
+                </select>
             </div>
         </div>
     </template>

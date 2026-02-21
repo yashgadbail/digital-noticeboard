@@ -51,7 +51,7 @@ app.post('/api/data', (req, res) => {
     const newData = req.body;
 
     // Basic validation to ensure required keys exist
-    if (!newData.notices || !newData.events || !newData.birthdays) {
+    if (!newData.notices || !newData.events || !newData.birthdays || !newData.cctv) {
         return res.status(400).json({ error: "Invalid data structure." });
     }
 

@@ -7,18 +7,17 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>SCMS Digital Noticeboard</title>
   <link rel="stylesheet" href="./style.css">
-  <!-- Google Fonts for Retro Pixel Look -->
+  <!-- Google Fonts for Modern Glass Theme -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap" rel="stylesheet">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;600;800&display=swap"
+    rel="stylesheet">
 </head>
 
 <body>
   <!-- 3D Background Canvas -->
   <canvas id="bg-canvas"></canvas>
-
-  <!-- Overlay CRT Effect -->
-  <div class="crt-overlay"></div>
 
   <!-- Main Container -->
   <div id="app">
@@ -44,7 +43,9 @@
       <!-- Screen 1: General Notices -->
       <section class="screen" id="screen-notices">
         <h2 class="section-title">> RECENT_NOTICES.TXT</h2>
-        <div class="widget-grid" id="notices-container"></div>
+        <div class="notices-wrapper">
+          <div class="widget-grid" id="notices-container"></div>
+        </div>
       </section>
 
       <!-- Screen 2: Events & Activities -->
@@ -57,6 +58,33 @@
       <section class="screen hidden" id="screen-birthdays">
         <h2 class="section-title">> TODAY_BIRTHDAYS.DAT</h2>
         <div class="widget-list" id="birthdays-container"></div>
+      </section>
+
+      <!-- Screen 4: CCTV Feeds -->
+      <section class="screen hidden" id="screen-cctv">
+        <h2 class="section-title">> SECURITY_FEEDS.CAM</h2>
+        <div class="cctv-grid">
+          <div class="cctv-feed">
+            <div class="cctv-static"></div>
+            <div class="cctv-label">CAM 01 // MAIN GATE</div>
+            <div class="cctv-rec blink">REC</div>
+          </div>
+          <div class="cctv-feed">
+            <div class="cctv-static"></div>
+            <div class="cctv-label">CAM 02 // SERVER ROOM</div>
+            <div class="cctv-rec blink">REC</div>
+          </div>
+          <div class="cctv-feed">
+            <div class="cctv-static"></div>
+            <div class="cctv-label">CAM 03 // LAB 302</div>
+            <div class="cctv-rec blink">REC</div>
+          </div>
+          <div class="cctv-feed">
+            <div class="cctv-static"></div>
+            <div class="cctv-label">CAM 04 // QUADRANGLE</div>
+            <div class="cctv-rec blink">REC</div>
+          </div>
+        </div>
       </section>
 
       <!-- Templates -->
@@ -107,6 +135,12 @@
     </footer>
 
   </div>
+
+  <!-- Floating Controls -->
+  <div class="controls-container">
+    <button id="theme-toggle-btn" class="theme-toggle" aria-label="Toggle Theme">☀️</button>
+  </div>
+  <a href="/admin.html" class="hidden-admin-btn" aria-label="Admin Page">⚙️</a>
 
   <script type="module" src="./main.js"></script>
 </body>

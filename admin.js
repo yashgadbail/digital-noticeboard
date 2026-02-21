@@ -1,8 +1,8 @@
-// Global State
 let adminData = {
     notices: [],
     events: [],
-    birthdays: []
+    birthdays: [],
+    cctv: []
 };
 
 // DOM Elements
@@ -16,6 +16,7 @@ const statusMsg = document.getElementById('save-status');
 const noticeTpl = document.getElementById('notice-template');
 const eventTpl = document.getElementById('event-template');
 const birthdayTpl = document.getElementById('birthday-template');
+const cctvTpl = document.getElementById('cctv-template');
 
 // Initialize
 async function init() {
@@ -34,10 +35,13 @@ function renderAll() {
     noticesList.innerHTML = '';
     eventsList.innerHTML = '';
     birthdaysList.innerHTML = '';
+    const cctvList = document.getElementById('cctv-list');
+    cctvList.innerHTML = '';
 
-    adminData.notices.forEach(n => appendNotice(n));
-    adminData.events.forEach(e => appendEvent(e));
-    adminData.birthdays.forEach(b => appendBirthday(b));
+    if (adminData.notices) adminData.notices.forEach(n => appendNotice(n));
+    if (adminData.events) adminData.events.forEach(e => appendEvent(e));
+    if (adminData.birthdays) adminData.birthdays.forEach(b => appendBirthday(b));
+    if (adminData.cctv) adminData.cctv.forEach(c => appendCctv(c));
 }
 
 function appendNotice(data = {}) {
@@ -74,10 +78,23 @@ function appendBirthday(data = {}) {
     birthdaysList.appendChild(clone);
 }
 
+function appendCctv(data = {}) {
+    const clone = cctvTpl.content.cloneNode(true);
+    const div = clone.querySelector('.data-item');
+    const cctvList = document.getElementById('cctv-list');
+
+    div.querySelector('.input-label').value = data.label || '';
+    div.querySelector('.input-stream').value = data.stream || '';
+    div.querySelector('.input-grid').value = data.grid || '1';
+
+    cctvList.appendChild(clone);
+}
+
 // Actions (Bound to window so inline onclick works)
 window.addNotice = () => appendNotice();
 window.addEvent = () => appendEvent();
 window.addBirthday = () => appendBirthday();
+window.addCctv = () => appendCctv();
 
 window.removeItem = (btn) => {
     if (confirm('Remove this item?')) {
@@ -94,7 +111,8 @@ saveBtn.addEventListener('click', async () => {
     const newData = {
         notices: [],
         events: [],
-        birthdays: []
+        birthdays: [],
+        cctv: []
     };
 
     // Parse Notices
@@ -125,6 +143,17 @@ saveBtn.addEventListener('click', async () => {
             name: item.querySelector('.input-name').value,
             department: item.querySelector('.input-dept').value,
             date: item.querySelector('.input-bdate').value
+        });
+    });
+
+    // Parse CCTV
+    const cctvList = document.getElementById('cctv-list');
+    cctvList.querySelectorAll('.data-item').forEach((item, idx) => {
+        newData.cctv.push({
+            id: String(idx + 1),
+            label: item.querySelector('.input-label').value,
+            stream: item.querySelector('.input-stream').value,
+            grid: item.querySelector('.input-grid').value
         });
     });
 

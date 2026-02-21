@@ -21,52 +21,62 @@
             </div>
             <div class="header-actions">
                 <span id="save-status" class="status-msg"></span>
+                <a href="/" class="btn" style="background:#e0e0e0; color:#333; text-decoration:none;">View
+                    Noticeboard</a>
                 <button id="save-btn" class="btn primary">Save Changes to Display</button>
             </div>
         </header>
 
-        <main class="admin-grid">
+        <div class="admin-tabs">
+            <button class="tab-btn active" onclick="switchTab('tab-notices')">Notices</button>
+            <button class="tab-btn" onclick="switchTab('tab-events')">Events</button>
+            <button class="tab-btn" onclick="switchTab('tab-birthdays')">Birthdays</button>
+            <button class="tab-btn" onclick="switchTab('tab-cctv')">CCTV Feeds</button>
+        </div>
+
+        <main class="admin-content">
 
             <!-- Notices Section -->
-            <section class="panel">
+            <section id="tab-notices" class="tab-pane active">
                 <div class="panel-header">
                     <h2>Recent Notices</h2>
                     <button class="btn small" onclick="addNotice()">+ Add Notice</button>
                 </div>
-                <div id="notices-list" class="item-list">
+                <!-- Card Container Grid -->
+                <div id="notices-list" class="card-grid">
                     <!-- Template injected via JS -->
                 </div>
             </section>
 
             <!-- Events Section -->
-            <section class="panel">
+            <section id="tab-events" class="tab-pane">
                 <div class="panel-header">
                     <h2>Upcoming Events</h2>
                     <button class="btn small" onclick="addEvent()">+ Add Event</button>
                 </div>
-                <div id="events-list" class="item-list">
+                <div id="events-list" class="card-grid">
                     <!-- Template injected via JS -->
                 </div>
             </section>
 
             <!-- Birthdays Section -->
-            <section class="panel">
+            <section id="tab-birthdays" class="tab-pane">
                 <div class="panel-header">
                     <h2>Birthdays</h2>
                     <button class="btn small" onclick="addBirthday()">+ Add Birthday</button>
                 </div>
-                <div id="birthdays-list" class="item-list">
+                <div id="birthdays-list" class="card-grid">
                     <!-- Template injected via JS -->
                 </div>
             </section>
 
             <!-- CCTV Section -->
-            <section class="panel">
+            <section id="tab-cctv" class="tab-pane">
                 <div class="panel-header">
                     <h2>Security Feeds (CCTV)</h2>
                     <button class="btn small" onclick="addCctv()">+ Add Feed</button>
                 </div>
-                <div id="cctv-list" class="item-list">
+                <div id="cctv-list" class="card-grid">
                     <!-- Template injected via JS -->
                 </div>
             </section>
@@ -78,13 +88,25 @@
     <template id="notice-template">
         <div class="data-item">
             <div class="item-header">
-                <input type="text" class="input-title" placeholder="Notice Title">
-                <button class="btn danger small" onclick="removeItem(this)">Remove</button>
+                <div class="input-group">
+                    <label>Notice Title</label>
+                    <input type="text" class="input-title" placeholder="e.g. HOLIDAY ANNOUNCEMENT">
+                </div>
+                <button class="btn danger small" onclick="promptRemoveItem(this)">Remove Notice</button>
             </div>
-            <textarea class="input-content" placeholder="Notice Content..."></textarea>
+
+            <div class="input-group">
+                <label>Notice Body Content</label>
+                <textarea class="input-content" placeholder="Type the main message here..."></textarea>
+            </div>
+
             <div class="item-footer">
-                <input type="date" class="input-date">
-                <label><input type="checkbox" class="input-urgent"> Urgent (Blink)</label>
+                <div class="input-group row-align">
+                    <label>Expiration Date</label>
+                    <input type="date" class="input-date">
+                </div>
+                <label class="checkbox-label"><input type="checkbox" class="input-urgent"> Mark as Urgent (Red
+                    Blink)</label>
             </div>
         </div>
     </template>
@@ -92,12 +114,23 @@
     <template id="event-template">
         <div class="data-item">
             <div class="item-header">
-                <input type="text" class="input-title" placeholder="Event Name">
-                <button class="btn danger small" onclick="removeItem(this)">Remove</button>
+                <div class="input-group">
+                    <label>Event Name</label>
+                    <input type="text" class="input-title" placeholder="e.g. Guest Lecture IT">
+                </div>
+                <button class="btn danger small" onclick="promptRemoveItem(this)">Remove Event</button>
             </div>
-            <input type="text" class="input-desc" placeholder="Location or Details">
+
+            <div class="input-group">
+                <label>Location / Details</label>
+                <input type="text" class="input-desc" placeholder="e.g. Room 302 at 11:00 AM">
+            </div>
+
             <div class="item-footer">
-                <input type="text" class="input-date-string" placeholder="e.g. NOV 15">
+                <div class="input-group row-align">
+                    <label>Display Date</label>
+                    <input type="text" class="input-date-string" placeholder="e.g. OCT 26">
+                </div>
             </div>
         </div>
     </template>
@@ -105,12 +138,23 @@
     <template id="birthday-template">
         <div class="data-item">
             <div class="item-header">
-                <input type="text" class="input-name" placeholder="Person's Name">
-                <button class="btn danger small" onclick="removeItem(this)">Remove</button>
+                <div class="input-group">
+                    <label>Person's Name</label>
+                    <input type="text" class="input-name" placeholder="e.g. Prof. Alan Turing">
+                </div>
+                <button class="btn danger small" onclick="promptRemoveItem(this)">Remove</button>
             </div>
-            <input type="text" class="input-dept" placeholder="Department">
+
+            <div class="input-group">
+                <label>Department / Role</label>
+                <input type="text" class="input-dept" placeholder="e.g. Computer Science">
+            </div>
+
             <div class="item-footer">
-                <input type="text" class="input-bdate" placeholder="MM-DD (e.g. 10-25)">
+                <div class="input-group row-align">
+                    <label>Birthday (MM-DD)</label>
+                    <input type="text" class="input-bdate" placeholder="e.g. 10-25">
+                </div>
             </div>
         </div>
     </template>
@@ -118,20 +162,44 @@
     <template id="cctv-template">
         <div class="data-item">
             <div class="item-header">
-                <input type="text" class="input-label" placeholder="Feed Label (e.g. MAIN GATE)">
-                <button class="btn danger small" onclick="removeItem(this)">Remove</button>
+                <div class="input-group">
+                    <label>Feed Label</label>
+                    <input type="text" class="input-label" placeholder="e.g. MAIN GATE">
+                </div>
+                <button class="btn danger small" onclick="promptRemoveItem(this)">Remove</button>
             </div>
-            <input type="text" class="input-stream" placeholder="Stream URL or IP Address (Leave blank for STATIC)">
+
+            <div class="input-group">
+                <label>Camera Stream URL</label>
+                <input type="text" class="input-stream"
+                    placeholder="http://ip_address/stream (Leave blank for STATIC image)">
+            </div>
+
             <div class="item-footer">
-                <select class="input-grid">
-                    <option value="1">Grid 1 (Top-Left)</option>
-                    <option value="2">Grid 2 (Top-Right)</option>
-                    <option value="3">Grid 3 (Bottom-Left)</option>
-                    <option value="4">Grid 4 (Bottom-Right)</option>
-                </select>
+                <div class="input-group row-align">
+                    <label>Grid Position</label>
+                    <select class="input-grid">
+                        <option value="1">Grid 1 (Top-Left)</option>
+                        <option value="2">Grid 2 (Top-Right)</option>
+                        <option value="3">Grid 3 (Bottom-Left)</option>
+                        <option value="4">Grid 4 (Bottom-Right)</option>
+                    </select>
+                </div>
             </div>
         </div>
     </template>
+
+    <!-- Custom Deletion Modal -->
+    <div id="delete-modal" class="modal-overlay">
+        <div class="modal">
+            <h3>Confirm Deletion</h3>
+            <p>Are you sure you want to remove this item? This action cannot be undone once saved.</p>
+            <div class="modal-actions">
+                <button class="btn" onclick="closeModal()">Cancel</button>
+                <button class="btn danger" onclick="confirmRemoveItem()">Yes, Remove</button>
+            </div>
+        </div>
+    </div>
 
     <script type="module" src="./admin.js"></script>
 </body>

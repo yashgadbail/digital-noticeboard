@@ -2,52 +2,24 @@
   "notices": [
     {
       "id": "1",
-      "title": "HOLIDAY ANNOUNCEMENT",
-      "content": "College will remain closed on Friday for Diwali preparations. t",
-      "date": "",
-      "urgent": true
-    },
-    {
-      "id": "2",
       "title": "GUEST LECTURE",
       "content": "Guest lecture on 'Future of AI in Marketing' in Room 302 at 11:00 AM tomorrow.",
       "date": "2026-10-26",
       "urgent": false
     },
     {
-      "id": "3",
+      "id": "2",
       "title": "LIBRARY RENEWAL",
       "content": "Please renew books before the end of the month to avoid late fees.",
       "date": "2026-10-20",
       "urgent": false
     },
     {
-      "id": "4",
+      "id": "3",
       "title": "OFFER LETTER SUBMISSION",
       "content": "Students of MSC-II are required to submit their offer letters to office. ",
       "date": "2026-02-21",
       "urgent": true
-    },
-    {
-      "id": "5",
-      "title": "Test",
-      "content": "Testrycv8pfrvycbrfovc",
-      "date": "2026-02-21",
-      "urgent": false
-    },
-    {
-      "id": "6",
-      "title": "TEST",
-      "content": "tyeuxvydilxydx",
-      "date": "",
-      "urgent": false
-    },
-    {
-      "id": "7",
-      "title": "klyueixvyu3o;cxupi",
-      "content": "rj,cyuyxov;cvuxp;odcxupdfoc",
-      "date": "2026-02-21",
-      "urgent": false
     }
   ],
   "events": [

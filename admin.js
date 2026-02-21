@@ -96,9 +96,41 @@ window.addEvent = () => appendEvent();
 window.addBirthday = () => appendBirthday();
 window.addCctv = () => appendCctv();
 
-window.removeItem = (btn) => {
-    if (confirm('Remove this item?')) {
-        btn.closest('.data-item').remove();
+// Tab Functionality
+window.switchTab = (tabId) => {
+    // Hide all panes
+    document.querySelectorAll('.tab-pane').forEach(pane => {
+        pane.classList.remove('active');
+    });
+    // Deselect all buttons
+    document.querySelectorAll('.tab-btn').forEach(btn => {
+        btn.classList.remove('active');
+    });
+
+    // Show target pane
+    document.getElementById(tabId).classList.add('active');
+    // Highlight target button
+    event.currentTarget.classList.add('active');
+};
+
+// Custom Modal Deletion Logic
+let itemToRemove = null;
+const deleteModal = document.getElementById('delete-modal');
+
+window.promptRemoveItem = (btn) => {
+    itemToRemove = btn.closest('.data-item');
+    deleteModal.classList.add('active');
+};
+
+window.closeModal = () => {
+    deleteModal.classList.remove('active');
+    itemToRemove = null;
+};
+
+window.confirmRemoveItem = () => {
+    if (itemToRemove) {
+        itemToRemove.remove();
+        closeModal();
     }
 };
 
